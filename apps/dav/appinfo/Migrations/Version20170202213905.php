@@ -32,7 +32,6 @@ use OCP\Migration\ISqlMigration;
 /*
  * Resolve userid/propertypath into fileid
  * Update all entries with actual fileid if possible
- * Drop all entries that can't be resolved
  */
 class Version20170202213905 implements ISqlMigration {
 
@@ -85,17 +84,6 @@ class Version20170202213905 implements ISqlMigration {
 
 		//Mounted FS can have side effects on further migrations
 		\OC_Util::tearDownFS();
-
-		// drop entries with empty fileid
-		$dropQuery = $qb->resetQueryParts()
-			->delete('properties')
-			->where(
-				$qb->expr()->eq('fileid', $qb->expr()->literal('0'))
-			)
-			->orWhere(
-				$qb->expr()->isNull('fileid')
-			);
-		$this->statements[] = $dropQuery->getSQL();
 
 		return $this->statements;
 	}

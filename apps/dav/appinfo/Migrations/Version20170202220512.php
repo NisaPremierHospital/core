@@ -25,9 +25,8 @@ use OCP\Migration\ISchemaMigration;
 use Doctrine\DBAL\Schema\Schema;
 
 /*
- * Drop property_index index if exists
- * Drop userid and propertypath columns
- * Add NOT NULL constraint to fileid column
+ * Code removed intentionally
+ * see https://github.com/owncloud/core/issues/29047
  */
 
 class Version20170202220512 implements ISchemaMigration {
@@ -37,22 +36,5 @@ class Version20170202220512 implements ISchemaMigration {
 	 * @param array $options
 	 */
 	public function changeSchema(Schema $schema, array $options) {
-		$prefix = $options['tablePrefix'];
-
-		$table = $schema->getTable("${prefix}properties");
-		if ($table->hasIndex('property_index')) {
-			$table->dropIndex('property_index');
-		}
-		if ($table->hasColumn('userid')) {
-			$table->dropColumn('userid');
-		}
-		if ($table->hasColumn('propertypath')) {
-			$table->dropColumn('propertypath');
-		}
-		$table->changeColumn('fileid', [
-			'notnull' => false,
-			'unsigned' => true,
-			'length' => 20,
-		]);
 	}
 }
